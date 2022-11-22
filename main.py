@@ -23,7 +23,7 @@ usuario_dao = usuarioDao(db)
 def index():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect('/login')
-    return render_template('inicial.html')
+    return render_template('home.html')
 
 @app.route('/login')
 def login():

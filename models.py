@@ -1,5 +1,5 @@
 class Alunos:
-    def __init__(self, matricula, nome, cpf, email, telefone, nascimento, rua, numero, cidade, cep, estado, pais, senha):
+    def __init__(self, matricula, nome, cpf, email, telefone, nascimento, rua, numero, cidade, cep, estado, pais, senha, tipo):
         self._matricula = matricula
         self._nome = nome
         self._cpf = cpf
@@ -13,6 +13,7 @@ class Alunos:
         self._estado = estado
         self._pais = pais
         self._senha = senha
+        self._tipo = tipo
 
 class Cursos:
     def __init__(self, nome_curso, campus):
@@ -20,7 +21,8 @@ class Cursos:
         self.campus = campus
 
 class Editais:
-    def __init__(self, numero, nome, descricao, status, qtde_vagas, tipo, professor):
+    def __init__(self, id, numero, nome, descricao, status, qtde_vagas, tipo, professor):
+        self.id = id
         self.numero = numero
         self.nome = nome
         self.descricao = descricao

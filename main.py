@@ -7,7 +7,7 @@ app.secret_key = 'LP2'
 from flask_mysqldb import MySQL
 
 from models import Alunos, Editais, Cursos
-from dao import alunoDao, usuarioDao
+from dao import alunoDao, usuarioDao, EditalDao
 
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
@@ -18,12 +18,15 @@ app.config['MYSQL_PORT'] = 3306
 db = MySQL(app)
 aluno_dao = alunoDao(db)
 usuario_dao = usuarioDao(db)
+edital_dao = EditalDao(db)
 
 @app.route('/')
 def index():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect('/login')
-    return render_template('home.html')
+    editais = edital_dao.listar()
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    return render_template('home.html', ed=editais, u=usuario)
 
 @app.route('/login')
 def login():
@@ -38,7 +41,6 @@ def autenticar():
     if usuario:
         if usuario._senha == request.form['senha']:
             session['usuario_logado']=request.form['usuario']
-            flash(usuario._nome + ' logou com sucesso!')
             proxima_pagina = request.form['proxima']
             if proxima_pagina == '':
                 return redirect('/')
@@ -51,8 +53,13 @@ def autenticar():
 @app.route('/logout')
 def logout():
     session['usuario_logado'] = None
-    flash('Nenhum usuário logado!')
     return redirect('/login')
+
+
+@app.route('/inscrever')
+def inscrever():
+    edital = edital_dao.busca_id(request.args.get('proximo'))
+    return render_template('Inscrever.html', insc=edital)
 
 
 if __name__ == '__main__':

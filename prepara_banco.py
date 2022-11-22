@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `Editais`.`Alunos` (
   `ESTADO` VARCHAR(20) NULL,
   `PAIS` VARCHAR(45) NULL,
   `SENHA` VARCHAR(45) NOT NULL,
+  `TIPO` TINYINT NOT NULL,
   PRIMARY KEY (`MATRICULA`))
 ENGINE = InnoDB;
 
@@ -75,9 +76,18 @@ conn.cursor().execute(criar_tabelas)
 
 cursor = conn.cursor()
 cursor.executemany(
-    'INSERT INTO Alunos (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',  
+    'INSERT INTO Alunos (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',  
     [
-        ('20211340021', 'Beatriz Moreira', '123456789', 'bia30.albano', '99656565', '20011030', 'Av Rebeca', '578', 'Muzambinho', '37789000', 'MG', 'Brasil', 'arrow'),
+        ('20211340021', 'Beatriz Moreira', '123456789', 'bia30.albano', '99656565', '20011030', 'Av Rebeca', '578', 'Muzambinho', '37789000', 'MG', 'Brasil', 'arrow', 1),
+        ('20211340025', 'Beatriz Albano', '123456789', 'bia30.albano', '99656565', '20011030', 'Av Rebeca', '578', 'Muzambinho', '37789000', 'MG', 'Brasil', '123456', 0)
+    ]
+)
+
+cursor = conn.cursor()
+cursor.executemany(
+    'INSERT INTO Editais (idEDITAIS, NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, PROFESSOR) values (%s, %s, %s, %s, %s, %s, %s, %s)',  
+    [
+        (1, '0223', 'Monitoria', 'Monitoria para quem quiser', 'aberto', 35, 'interno', 'Diego'),
     ]
 )
 

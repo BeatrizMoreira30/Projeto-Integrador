@@ -24,8 +24,8 @@ edital_dao = EditalDao(db)
 def index():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect('/login')
-    editais = edital_dao.listar()
     usuario = usuario_dao.busca_id(session['usuario_logado'])
+    editais = edital_dao.listar()
     return render_template('home.html', ed=editais, u=usuario)
 
 @app.route('/login')
@@ -61,6 +61,26 @@ def inscrever():
     edital = edital_dao.busca_id(request.args.get('proximo'))
     return render_template('Inscrever.html', insc=edital)
 
+@app.route('/cadastrar_edital')
+def cadastrar_edital():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo != 1:
+        return render_template('erro_adm.html')
+    return render_template('cadastrar_edital.html')
+
+@app.route('/novo_edital', methods=['POST',])
+def novo_edital():
+    numero = request.form['inputNumEdital']
+    nome = request.form['inputNome']
+    descricao = request.form['inputDescricao']
+    status = request.form['inputGroupSelect01']
+    vagas = request.form['inputVagas']
+    tipo = request.form['inputTipoEdital']
+    fomento = request.form['inputFomento']
+    professor = request.form['inputProfessor']
+    edital = Editais(numero, nome, descricao, status, vagas, tipo, fomento, professor)
+    edital_dao.salvar(edital)
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run()

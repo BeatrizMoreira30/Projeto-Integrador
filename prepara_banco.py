@@ -36,13 +36,14 @@ ENGINE = InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS `Editais`.`Editais` (
-  `idEDITAIS` INT NOT NULL,
+  `idEDITAIS` INT NOT NULL AUTO_INCREMENT,
   `NUMERO` VARCHAR(45) NULL,
-  `NOME` VARCHAR(45) NULL,
+  `NOME` VARCHAR(1000) NULL,
   `DESCRICAO` VARCHAR(1000) NULL,
   `STATUS` VARCHAR(45) NULL,
   `QTD_VAGAS` INT NULL,
   `TIPO` VARCHAR(45) NULL,
+  `FOMENTO` VARCHAR(45) NULL,
   `PROFESSOR` VARCHAR(45) NULL,
   PRIMARY KEY (`idEDITAIS`))
 ENGINE = InnoDB;
@@ -83,13 +84,7 @@ cursor.executemany(
     ]
 )
 
-cursor = conn.cursor()
-cursor.executemany(
-    'INSERT INTO Editais (idEDITAIS, NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, PROFESSOR) values (%s, %s, %s, %s, %s, %s, %s, %s)',  
-    [
-        (1, '0223', 'Monitoria', 'Monitoria para quem quiser', 'aberto', 35, 'interno', 'Diego'),
-    ]
-)
+
 
 conn.commit()
 cursor.close()

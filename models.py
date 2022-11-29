@@ -21,7 +21,7 @@ class Cursos:
         self.campus = campus
 
 class Editais:
-    def __init__(self, id, numero, nome, descricao, status, qtde_vagas, tipo, professor):
+    def __init__(self, numero, nome, descricao, status, qtde_vagas, tipo, fomento, professor, id=None):
         self.id = id
         self.numero = numero
         self.nome = nome
@@ -29,4 +29,5 @@ class Editais:
         self.status = status
         self.qtde_vagas = qtde_vagas
         self.tipo = tipo
+        self.fomento = fomento
         self.professor = professor

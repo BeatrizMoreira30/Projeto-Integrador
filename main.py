@@ -56,9 +56,11 @@ def logout():
     return redirect('/login')
 
 
-@app.route('/inscrever')
-def inscrever():
-    edital = edital_dao.busca_id(request.args.get('proximo'))
+@app.route('/inscrever/<int:id>')
+def inscrever(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect('/login?proxima=inscrever')
+    edital = edital_dao.busca_id(id)
     return render_template('Inscrever.html', insc=edital)
 
 @app.route('/cadastrar_edital')

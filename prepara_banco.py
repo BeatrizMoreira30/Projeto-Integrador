@@ -79,7 +79,7 @@ cursor = conn.cursor()
 cursor.executemany(
     'INSERT INTO Alunos (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',  
     [
-        ('20211340021', 'Beatriz Moreira', '123456789', 'bia30.albano', '99656565', '20011030', 'Av Rebeca', '578', 'Muzambinho', '37789000', 'MG', 'Brasil', 'arrow', 1),
+        ('20211340021', 'Beatriz Moreira', '123456789', 'bia30.albano', '99656565', '20011030', 'Av Rebeca', '578', 'Muzambinho', '37789000', 'MG', 'Brasil', 'bia', 1),
         ('20211340025', 'Beatriz Albano', '123456789', 'bia30.albano', '99656565', '20011030', 'Av Rebeca', '578', 'Muzambinho', '37789000', 'MG', 'Brasil', '123456', 0)
     ]
 )

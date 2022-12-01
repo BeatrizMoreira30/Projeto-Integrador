@@ -3,8 +3,8 @@ from models import Alunos, Editais
 SQL_CRIA_USUARIO = 'insert into Alunos (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 SQL_BUSCA_ID = 'select MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO from Alunos where MATRICULA = %s'
 SQL_BUSCA_EDITAIS = 'select * from Editais'
-SQL_BUSCA_EDITAL_ID = 'select * from Editais where id = %s'
-SQL_CRIA_EDITAL = 'insert into Editais (NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR) values (%s, %s, %s, %s, %s, %s, %s, %s)'
+SQL_BUSCA_EDITAL_ID = 'select idEDITAIS, NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR from Editais where idEDITAIS = %s'
+SQL_CRIA_EDITAL = 'insert into Editais (NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR, idEDITAIS) values (%s, %s, %s, %s, %s, %s, %s, %s)'
 SQL_ATUALIZA_EDITAL = 'update Editais set NUMERO = %s, NOME = %s, DESCRICAO = %s, STATUS = %s, QTD_VAGAS =  %s, TIPO = %s, FOMENTO = %s, PROFESSOR = %s, idEDITAIS = %s'
 
 class alunoDao:
@@ -48,9 +48,10 @@ class EditalDao:
     def busca_id(self, id):
         cursor = self.__db.connection.cursor()
         cursor.execute(SQL_BUSCA_EDITAL_ID, (id,))
-        dados = cursor.fetchone()
-        usuario = traduz_edital(dados) if dados else None
-        return usuario
+        tupla = cursor.fetchone()
+        return Editais(tupla[1], tupla[2], tupla[3], tupla[4], tupla[5], tupla[6], tupla[7], tupla[8], id=tupla[0])
+
+
     
     def salvar(self, edital):
         cursor = self.__db.connection.cursor()

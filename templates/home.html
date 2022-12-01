@@ -39,7 +39,7 @@
     <div class="container mt-5 pt-5 p-md-5 d-flex flex-direction-row gap-4">
       {% for edital in ed %}
       <div>
-        <a href="/inscrever" class="btn btn-lg btn-success w-30">  
+        <a href="{{url_for('inscrever', id=edital.id)}}" class="btn btn-lg btn-success w-30">  
           {{edital.nome}}
           <img src="{{url_for('static', filename='edital2.jpg')}}" style="width: 100px "/>
         </a>

@@ -31,3 +31,4 @@ class Editais:
         self.tipo = tipo
         self.fomento = fomento
         self.professor = professor
+

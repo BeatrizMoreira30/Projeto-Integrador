@@ -61,7 +61,10 @@ def inscrever(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect('/login?proxima=inscrever')
     edital = edital_dao.busca_id(id)
-    return render_template('Inscrever.html', insc=edital)
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    return render_template('Inscrever.html', insc=edital, usuario=usuario)
+
+
 
 @app.route('/cadastrar_edital')
 def cadastrar_edital():

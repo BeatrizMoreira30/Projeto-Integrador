@@ -1,11 +1,13 @@
-from models import Alunos, Editais
+from models import Alunos, Editais, Inscricao, Cursos
 
 SQL_CRIA_USUARIO = 'insert into Alunos (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 SQL_BUSCA_ID = 'select MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO from Alunos where MATRICULA = %s'
 SQL_BUSCA_EDITAIS = 'select * from Editais'
 SQL_BUSCA_EDITAL_ID = 'select idEDITAIS, NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR from Editais where idEDITAIS = %s'
-SQL_CRIA_EDITAL = 'insert into Editais (NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR, idEDITAIS) values (%s, %s, %s, %s, %s, %s, %s, %s)'
+SQL_CRIA_EDITAL = 'insert into Editais (NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR) values (%s, %s, %s, %s, %s, %s, %s, %s)'
 SQL_ATUALIZA_EDITAL = 'update Editais set NUMERO = %s, NOME = %s, DESCRICAO = %s, STATUS = %s, QTD_VAGAS =  %s, TIPO = %s, FOMENTO = %s, PROFESSOR = %s, idEDITAIS = %s'
+SQL_CRIA_INSCRICAO = 'insert into Inscricoes (Alunos_MATRICULA, EDITAIS_idEDITAIS, CURSOS_idCURSOS) values (%s, %s, %s)'
+SQL_BUSCA_CURSO = 'select * from Cursos'
 
 class alunoDao:
     def __init__(self, db):
@@ -70,3 +72,32 @@ def traduz_editais(editais):
     def cria_edi_tupla(tupla):
         return Editais(tupla[1], tupla[2], tupla[3], tupla[4], tupla[5], tupla[6], tupla[7], tupla[8],  id=tupla[0])
     return list(map(cria_edi_tupla, editais))
+
+class InscricaoDao:
+    def __init__(self, db):
+        self.__db = db
+    
+    def salvar(self, inscricao):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_CRIA_INSCRICAO, (inscricao._ra, inscricao._edital, inscricao._curso))
+        cursor._id = cursor.lastrowid
+
+        self.__db.connection.commit()
+
+class CursoDao:
+    def __init__(self, db):
+        self.__db = db
+    
+    def listar(self):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_BUSCA_CURSO)
+        cursos = traduz_cursos(cursor.fetchall())
+        return cursos
+
+def traduz_cursos(cursos):
+    def cria_cursos_tupla(tupla):
+        return Cursos(tupla[1], tupla[2], id=tupla[0])
+    return list(map(cria_cursos_tupla, cursos))
+
+
+

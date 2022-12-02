@@ -40,7 +40,7 @@
     <div class="container mt-5 mt-5 pt-5 p-md-5">
       <div class="row align-items-center">
         </div class="col-md-10 mx-auto col-lg-4">
-          <form class="p-4 p-md-5 border rounded-4 bg-light">
+          <form class="p-4 p-md-5 border rounded-4 bg-light" action="/inscricao" method="post">
            <div align="center">
            <p>
              <b>DESCRIÇÃO DO EDITAL</b>
@@ -50,10 +50,19 @@
             </p>
           </div>
             <div class="form-floating mb-4">
+              <input type="hidden" name="idedital" id="idedital" value="{{insc.id}}">
               <input
                 type="number"
                 class="form-control" id="inputRA" name="inputRA" placeholder="RA" value="{{usuario._matricula}}"/>
               <label for="inputRA">RA</label>
+            </div>
+            <div class="input-group p-md-1">
+              <label class="input-group-text" for="inputGroupSelect01">Curso</label>
+              <select class="form-select" id="inputCurso" name="inputCurso">
+                {% for curso in cursos %}
+                <option value="{{curso._id}}">{{curso._nome_curso}} - {{curso._campus}}</option>
+                {% endfor %}
+              </select>
             </div>
             <button class="btn btn-lg btn-success w-10" type="submit">Inscrever</button>
           </form>

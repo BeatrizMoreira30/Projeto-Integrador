@@ -84,7 +84,14 @@ cursor.executemany(
     ]
 )
 
-
+cursor = conn.cursor()
+cursor.executemany(
+    'INSERT INTO Cursos (idCURSOS, NOME_CURSO, CAMPUS) values (%s, %s, %s)',  
+    [
+        (1, 'Ciência da Computação', 'Campus Muzambinho'),
+        (2, 'Engenharia da Computação', 'Campus Poços de Caldas')
+    ]
+)
 
 conn.commit()
 cursor.close()

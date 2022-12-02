@@ -15,11 +15,6 @@ class Alunos:
         self._senha = senha
         self._tipo = tipo
 
-class Cursos:
-    def __init__(self, nome_curso, campus):
-        self.nome_curso = nome_curso
-        self.campus = campus
-
 class Editais:
     def __init__(self, numero, nome, descricao, status, qtde_vagas, tipo, fomento, professor, id=None):
         self.id = id
@@ -32,3 +27,14 @@ class Editais:
         self.fomento = fomento
         self.professor = professor
 
+class Inscricao:
+    def __init__(self, ra, edital, curso):
+        self._ra = ra
+        self._edital = edital
+        self._curso = curso
+
+class Cursos:
+    def __init__(self, nome_curso, campus, id=None):
+        self._id = id
+        self._nome_curso = nome_curso
+        self._campus = campus

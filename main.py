@@ -6,8 +6,8 @@ app.secret_key = 'LP2'
 
 from flask_mysqldb import MySQL
 
-from models import Alunos, Editais, Cursos
-from dao import alunoDao, usuarioDao, EditalDao
+from models import Alunos, Editais, Cursos, Inscricao
+from dao import usuarioDao, EditalDao, CursoDao, InscricaoDao, alunoDao
 
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
@@ -19,6 +19,8 @@ db = MySQL(app)
 aluno_dao = alunoDao(db)
 usuario_dao = usuarioDao(db)
 edital_dao = EditalDao(db)
+curso_dao = CursoDao(db)
+inscricao_dao = InscricaoDao(db)
 
 @app.route('/')
 def index():
@@ -62,9 +64,17 @@ def inscrever(id):
         return redirect('/login?proxima=inscrever')
     edital = edital_dao.busca_id(id)
     usuario = usuario_dao.busca_id(session['usuario_logado'])
-    return render_template('Inscrever.html', insc=edital, usuario=usuario)
+    cursos = curso_dao.listar()
+    return render_template('Inscrever.html', insc=edital, usuario=usuario, cursos=cursos)
 
-
+@app.route('/inscricao', methods=['POST',])
+def inscricao():
+    ra = request.form['inputRA']
+    edital = request.form['idedital']
+    curso = request.form['inputCurso']
+    inscricao = Inscricao(ra, edital, curso)
+    inscricao_dao.salvar(inscricao)
+    return redirect('/')
 
 @app.route('/cadastrar_edital')
 def cadastrar_edital():

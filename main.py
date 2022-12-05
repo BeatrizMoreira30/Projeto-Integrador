@@ -12,7 +12,7 @@ from dao import usuarioDao, EditalDao, CursoDao, InscricaoDao, alunoDao
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Beatriz.123456'
+app.config['MYSQL_PASSWORD'] = '123456'
 app.config['MYSQL_DB'] = 'Editais'
 app.config['MYSQL_PORT'] = 3306
 db = MySQL(app)
@@ -96,6 +96,39 @@ def novo_edital():
     edital = Editais(numero, nome, descricao, status, vagas, tipo, fomento, professor)
     edital_dao.salvar(edital)
     return redirect('/')
+
+@app.route('/editar_edital/<int:id>')
+def editar_edital(id):
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        edital = edital_dao.busca_id(id)
+        return render_template('editar_edital.html', edital=edital)
+
+@app.route('/atualizar_edital', methods=['POST',])
+def atualizar_edital():
+    id = request.form['inputIdEdital']
+    numero = request.form['inputNumEdital']
+    nome = request.form['inputNome']
+    descricao = request.form['inputDescricao']
+    status = request.form['inputGroupSelect01']
+    vagas = request.form['inputVagas']
+    tipo = request.form['inputTipoEdital']
+    fomento = request.form['inputFomento']
+    professor = request.form['inputProfessor']
+    edital = Editais(numero, nome, descricao, status, vagas, tipo, fomento, professor, id)
+    edital_dao.salvar(edital)
+    return redirect('/')
+
+
+@app.route('/excluir_edital/<int:id>')
+def excluir_edital(id):
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        edital_dao.excluir(id)
+        return redirect('/')
+
+
+
 
 if __name__ == '__main__':
     app.run()

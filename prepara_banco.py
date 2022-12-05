@@ -1,6 +1,6 @@
 import MySQLdb
 print('Conectando...')
-conn = MySQLdb.connect(user='root', passwd='Beatriz.123456', host='127.0.0.1', port=3306, charset='utf8')
+conn = MySQLdb.connect(user='root', passwd='123456', host='127.0.0.1', port=3306, charset='utf8')
 
 conn.cursor().execute("DROP DATABASE `Editais`;")
 conn.commit()
@@ -28,7 +28,7 @@ ENGINE = InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS `Editais`.`Cursos` (
-  `idCURSOS` INT NOT NULL,
+  `idCURSOS` INT NOT NULL AUTO_INCREMENT,
   `NOME_CURSO` VARCHAR(45) NOT NULL,
   `CAMPUS` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idCURSOS`))

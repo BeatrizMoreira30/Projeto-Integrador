@@ -40,24 +40,25 @@
     <div class="container mt-5 mt-5 pt-5 p-md-5">
       <div class="row align-items-center">
         </div class="col-md-10 mx-auto col-lg-4">
-          <form class="p-4 p-md-5 border rounded-4 bg-light" action="/novo_edital" method="post">
+          <form class="p-4 p-md-5 border rounded-4 bg-light" action="/atualizar_edital" method="post">
+            <input type="hidden" id="inputIdEdital" name="inputIdEdital" value="{{edital.id}}">
             <div class="number p-md-1">
               <span class="input-group-text">Número Edital</span>
               <input
               type="text"
-              class="form-control" id="inputNumEdital" name="inputNumEdital" placeholder="Ex: 001/2022"/>
+              class="form-control" id="inputNumEdital" name="inputNumEdital" value="{{edital.numero}}" placeholder="Ex: 001/2022"/>
             </div>
             <div class="text p-md-1">
               <span class="input-group-text">Nome do Edital</span>
-              <textarea class="form-control" aria-label="Nome do Edital" id="inputNome" name="inputNome"></textarea>
+              <textarea class="form-control" aria-label="Nome do Edital" id="inputNome" name="inputNome" >{{edital.nome}}</textarea>
             </div>
             <div class="text p-md-1">
               <span class="input-group-text">Descrição</span>
-              <textarea class="form-control" aria-label="Descrição" id="inputDescricao" name="inputDescricao" ></textarea>
+              <textarea class="form-control" aria-label="Descrição" id="inputDescricao" name="inputDescricao" >{{edital.descricao}}</textarea>
             </div>
             <div class="input-group p-md-1">
               <label class="input-group-text" for="inputGroupSelect01">Status</label>
-              <select class="form-select" id="inputGroupSelect01" name="inputGroupSelect01">
+              <select class="form-select" id="inputGroupSelect01" name="inputGroupSelect01" aria-valuenow="{{edital.status}}">
                 <option value="1">Ativo</option>
                 <option value="2">Inativo</option>
               </select>
@@ -66,28 +67,28 @@
               <span class="input-group-text">Vagas</span>
               <input
               type="number"
-              class="form-control" id="inputVagas" name="inputVagas" placeholder="Quantidade de Vagas"/>
+              class="form-control" id="inputVagas" name="inputVagas" value="{{edital.qtde_vagas}}" placeholder="Quantidade de Vagas"/>
             </div>
             <div class="number p-md-1">
               <span class="input-group-text">Tipo de Edital</span>
               <input
               type="text"
-              class="form-control" id="inputTipoEdital" name="inputTipoEdital" placeholder="Ex: Auxilio estudantil, cursos"/>
+              class="form-control" id="inputTipoEdital" name="inputTipoEdital" value="{{edital.tipo}}" placeholder="Ex: Auxilio estudantil, cursos"/>
             </div>
             <div class="number p-md-1">
               <span class="input-group-text">Fomento</span>
               <input
               type="text"
-              class="form-control" id="inputFomento" name="inputFomento" placeholder="Ex: Capes, ANCINE "/>
+              class="form-control" id="inputFomento" name="inputFomento" value="{{edital.fomento}}" placeholder="Ex: Capes, ANCINE "/>
             </div>
             <div class="number p-md-1">
               <span class="input-group-text">Professor envolvido</span>
               <input
               type="text"
-              class="form-control" id="inputProfessor" name="inputProfessor" placeholder="Nome completo do professor"/>
+              class="form-control" id="inputProfessor" name="inputProfessor" value="{{edital.professor}}" placeholder="Nome completo do professor"/>
             </div>
             <div class="row align-items-center">
-              <button class="btn btn-lg btn-success" type="submit">Cadastrar</button>
+              <button class="btn btn-lg btn-success" type="submit">Salvar</button>
             </div>
           </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>

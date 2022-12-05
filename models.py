@@ -38,3 +38,9 @@ class Cursos:
         self._id = id
         self._nome_curso = nome_curso
         self._campus = campus
+
+class Fomentos:
+    def __init__(self, nome_curso, campus, id=None):
+        self._id = id
+        self._nome_curso = nome_curso
+        self._campus = campus

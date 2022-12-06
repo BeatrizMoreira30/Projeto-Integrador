@@ -6,13 +6,13 @@ app.secret_key = 'LP2'
 
 from flask_mysqldb import MySQL
 
-from models import Alunos, Editais, Cursos, Inscricao
-from dao import usuarioDao, EditalDao, CursoDao, InscricaoDao, alunoDao
+from models import Alunos, Editais, Cursos, Inscricao, Fomentos, Tipos
+from dao import usuarioDao, EditalDao, CursoDao, InscricaoDao, alunoDao, TipoDao, FomentoDao
 
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '123456'
+app.config['MYSQL_PASSWORD'] = 'Beatriz.123456'
 app.config['MYSQL_DB'] = 'Editais'
 app.config['MYSQL_PORT'] = 3306
 db = MySQL(app)
@@ -21,6 +21,8 @@ usuario_dao = usuarioDao(db)
 edital_dao = EditalDao(db)
 curso_dao = CursoDao(db)
 inscricao_dao = InscricaoDao(db)
+tipo_dao = TipoDao(db)
+fomento_dao = FomentoDao(db)
 
 @app.route('/')
 def index():
@@ -58,30 +60,13 @@ def logout():
     return redirect('/login')
 
 
-@app.route('/inscrever/<int:id>')
-def inscrever(id):
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect('/login?proxima=inscrever')
-    edital = edital_dao.busca_id(id)
-    usuario = usuario_dao.busca_id(session['usuario_logado'])
-    cursos = curso_dao.listar()
-    return render_template('Inscrever.html', insc=edital, usuario=usuario, cursos=cursos)
-
-@app.route('/inscricao', methods=['POST',])
-def inscricao():
-    ra = request.form['inputRA']
-    edital = request.form['idedital']
-    curso = request.form['inputCurso']
-    inscricao = Inscricao(ra, edital, curso)
-    inscricao_dao.salvar(inscricao)
-    return redirect('/')
-
 @app.route('/cadastrar_edital')
 def cadastrar_edital():
     usuario = usuario_dao.busca_id(session['usuario_logado'])
     if usuario._tipo != 1:
         return render_template('erro_adm.html')
-    return render_template('cadastrar_edital.html')
+    tipos = tipo_dao.listar()
+    return render_template('cadastrar_edital.html', tipos=tipos)
 
 @app.route('/novo_edital', methods=['POST',])
 def novo_edital():
@@ -127,8 +112,38 @@ def excluir_edital(id):
         edital_dao.excluir(id)
         return redirect('/')
 
+@app.route('/inscrever/<int:id>')
+def inscrever(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect('/login?proxima=inscrever')
+    edital = edital_dao.busca_id(id)
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    cursos = curso_dao.listar()
+    return render_template('Inscrever.html', insc=edital, usuario=usuario, cursos=cursos)
 
+@app.route('/inscricao', methods=['POST',])
+def inscricao():
+    ra = request.form['inputRA']
+    edital = request.form['idedital']
+    curso = request.form['inputCurso']
+    inscricao = Inscricao(ra, edital, curso)
+    inscricao_dao.salvar(inscricao)
+    return redirect('/')
 
+@app.route('/cadastrar_tipo')
+def cadastrar_tipo():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo != 1:
+        return render_template('erro_adm.html')
+    return render_template('cadastrar_tipo.html')
+
+@app.route('/novo_tipo', methods=['POST', ])
+def novo_tipo():
+    nome_tipo = request.form['inputNomeTipo']
+    tipo = Tipos(nome_tipo)
+    tipo_dao.salvar(tipo)
+    return redirect('/')
+    
 
 if __name__ == '__main__':
     app.run()

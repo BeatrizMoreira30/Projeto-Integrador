@@ -1,20 +1,33 @@
-from models import Alunos, Editais, Inscricao, Cursos
+from models import Alunos, Editais, Inscricao, Cursos, Tipos, Fomentos
 
-SQL_CRIA_USUARIO = 'insert into Alunos (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-SQL_BUSCA_ID = 'select MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO from Alunos where MATRICULA = %s'
+SQL_CRIA_USUARIO = 'insert into Usuarios (MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+SQL_BUSCA_ID = 'select MATRICULA, NOME, CPF, EMAIL, TELEFONE, NASCIMENTO, RUA, NUMERO, CIDADE, CEP, ESTADO, PAIS, SENHA, TIPO from Usuarios where MATRICULA = %s'
+
 SQL_BUSCA_EDITAIS = 'select * from Editais'
 SQL_BUSCA_EDITAL_ID = 'select * from Editais where idEDITAIS = %s'
-SQL_CRIA_EDITAL = 'insert into Editais (NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TIPO, FOMENTO, PROFESSOR) values (%s, %s, %s, %s, %s, %s, %s, %s)'
-SQL_ATUALIZA_EDITAL = 'update Editais set NUMERO = %s, NOME = %s, DESCRICAO = %s, STATUS = %s, QTD_VAGAS =  %s, TIPO = %s, FOMENTO = %s, PROFESSOR = %s where idEDITAIS = %s'
+SQL_CRIA_EDITAL = 'insert into Editais (NUMERO, NOME, DESCRICAO, STATUS, QTD_VAGAS, TipoEdital_idTipoEdital, Fomentos_idFomentos, PROFESSOR) values (%s, %s, %s, %s, %s, %s, %s, %s)'
+SQL_ATUALIZA_EDITAL = 'update Editais set NUMERO = %s, NOME = %s, DESCRICAO = %s, STATUS = %s, QTD_VAGAS =  %s, TipoEdital_idTipoEdital = %s, Fomentos_idFomentos = %s, PROFESSOR = %s where idEDITAIS = %s'
 SQL_EXCLUI_EDITAL = 'delete from Editais where idEDITAIS = %s'
-SQL_CRIA_INSCRICAO = 'insert into Inscricoes (Alunos_MATRICULA, EDITAIS_idEDITAIS, CURSOS_idCURSOS) values (%s, %s, %s)'
-SQL_ATUALIZA_INSCRICAO = 'update Inscricoes EDITAIS_idEDITAIS = %s, CURSOS_idCURSOS = %s where Alunos_MATRICULA = %s'
+
+SQL_CRIA_INSCRICAO = 'insert into Inscricoes (Usuarios_MATRICULA, EDITAIS_idEDITAIS, CURSOS_idCURSOS) values (%s, %s, %s)'
+SQL_ATUALIZA_INSCRICAO = 'update Inscricoes EDITAIS_idEDITAIS = %s, CURSOS_idCURSOS = %s where Usuarios_MATRICULA = %s'
 SQL_BUSCA_INSCRICOES = 'select * from Inscricoes'
-SQL_BUSCA_INSCRICAO_ID = 'select * from Inscricoes where Alunos_MATRICULA = %s '
+SQL_BUSCA_INSCRICAO_ID = 'select * from Inscricoes where Usuarios_MATRICULA = %s '
+
 SQL_BUSCA_CURSO = 'select * from Cursos'
 SQL_ATUALIZA_CURSO = 'update Cursos set  NOME_CURSO = %s, CAMPUS = %s where idCURSOS = %s'
 SQL_CRIA_CURSO = 'insert into Cursos (NOME_CURSO, CAMPUS) values (%s, %s)'
 SQL_BUSCA_CURSO_ID = 'select * from Cursos where idCURSOS = %s'
+
+SQL_BUSCA_TIPO = 'select * from TipoEdital'
+SQL_ATUALIZA_TIPO = 'update TipoEdital set  NomeTipo = %s where idTipoEdital = %s'
+SQL_CRIA_TIPO = 'insert into TipoEdital (NomeTipo) values (%s)'
+SQL_BUSCA_TIPO_ID = 'select * from TipoEdital where idTipoEdital = %s'
+
+SQL_BUSCA_FOMENTO = 'select * from Fomentos'
+SQL_ATUALIZA_FOMENTO = 'update Fomentos set  NomeFomento = %s where idFomentos = %s'
+SQL_CRIA_FOMENTO = 'insert into Fomentos (NomeFomento) values (%s)'
+SQL_BUSCA_FOMENTO_ID = 'select * from Fomentos where idFomentos = %s'
 
 class alunoDao:
     def __init__(self, db):
@@ -150,6 +163,72 @@ def traduz_cursos(cursos):
     def cria_cursos_tupla(tupla):
         return Cursos(tupla[1], tupla[2], id=tupla[0])
     return list(map(cria_cursos_tupla, cursos))
+
+
+class TipoDao:
+    def __init__(self, db):
+        self.__db = db
+    
+    def listar(self):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_BUSCA_TIPO)
+        tipos = traduz_tipos(cursor.fetchall())
+        return tipos
+
+    def busca_id(self, id):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_BUSCA_TIPO_ID, (id,))
+        tupla = cursor.fetchone()
+        return Cursos(tupla[1], id=tupla[0])
+
+    def salvar(self, tipo):
+        cursor = self.__db.connection.cursor()
+        if (tipo._id):
+            cursor.execute(SQL_ATUALIZA_TIPO, (tipo._nome_tipo, tipo._id))
+        else:
+            cursor.execute(SQL_CRIA_TIPO, (tipo._nome_tipo, ))
+            cursor._id = cursor.lastrowid
+        self.__db.connection.commit()
+        return tipo
+
+def traduz_tipos(tipos):
+    def cria_tipos_tupla(tupla):
+        return Tipos(tupla[1], id=tupla[0])
+    return list(map(cria_tipos_tupla, tipos))
+
+
+class FomentoDao:
+    def __init__(self, db):
+        self.__db = db
+    
+    def listar(self):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_BUSCA_FOMENTO)
+        fomentos = traduz_fomentos(cursor.fetchall())
+        return fomentos
+
+    def busca_id(self, id):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_BUSCA_FOMENTO_ID, (id,))
+        tupla = cursor.fetchone()
+        return Fomentos(tupla[1], id=tupla[0])
+
+    def salvar(self, fomento):
+        cursor = self.__db.connection.cursor()
+        if (fomento._id):
+            cursor.execute(SQL_ATUALIZA_FOMENTO, (fomento._nome_fomento, fomento._id))
+        else: 
+            cursor.execute(SQL_CRIA_FOMENTO, (fomento._nome_fomento))
+            cursor._id = cursor.lastrowid
+        self.__db.connection.commit()
+        return fomento
+
+def traduz_fomentos(fomentos):
+    def cria_fomentos_tupla(tupla):
+        return Fomentos(tupla[1], id=tupla[0])
+    return list(map(cria_fomentos_tupla, fomentos))
+
+
 
 
 

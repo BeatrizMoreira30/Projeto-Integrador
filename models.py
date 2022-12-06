@@ -40,7 +40,11 @@ class Cursos:
         self._campus = campus
 
 class Fomentos:
-    def __init__(self, nome_curso, campus, id=None):
+    def __init__(self, nome_fomento, id=None):
         self._id = id
-        self._nome_curso = nome_curso
-        self._campus = campus
+        self._nome_fomento = nome_fomento
+
+class Tipos:
+    def __init__(self, nome_tipo, id=None):
+        self._id = id
+        self._nome_tipo = nome_tipo

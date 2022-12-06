@@ -39,53 +39,12 @@
     <div class="container mt-5 mt-5 pt-5 p-md-5">
       <div class="row align-items-center">
         </div class="col-md-10 mx-auto col-lg-4">
-          <form class="p-4 p-md-5 border rounded-4 bg-light" action="/novo_edital" method="post">
+          <form class="p-4 p-md-5 border rounded-4 bg-light" action="/novo_tipo" method="post">
             <div class="number p-md-1">
-              <span class="input-group-text">Número Edital</span>
+              <span class="input-group-text">Nome Tipo</span>
               <input
               type="text"
-              class="form-control" id="inputNumEdital" name="inputNumEdital" placeholder="Ex: 001/2022"/>
-            </div>
-            <div class="text p-md-1">
-              <span class="input-group-text">Nome do Edital</span>
-              <textarea class="form-control" aria-label="Nome do Edital" id="inputNome" name="inputNome"></textarea>
-            </div>
-            <div class="text p-md-1">
-              <span class="input-group-text">Descrição</span>
-              <textarea class="form-control" aria-label="Descrição" id="inputDescricao" name="inputDescricao" ></textarea>
-            </div>
-            <div class="input-group p-md-1">
-              <label class="input-group-text" for="inputGroupSelect01">Status</label>
-              <select class="form-select" id="inputGroupSelect01" name="inputGroupSelect01">
-                <option value="1">Ativo</option>
-                <option value="2">Inativo</option>
-              </select>
-            </div>
-            <div class="number p-md-1">
-              <span class="input-group-text">Vagas</span>
-              <input
-              type="number"
-              class="form-control" id="inputVagas" name="inputVagas" placeholder="Quantidade de Vagas"/>
-            </div>
-            <div class="input-group p-md-1">
-              <label class="input-group-text" for="inputTipoEdital">Tipo</label>
-              <select class="form-select" id="inputTipoEdital" name="inputTipoEdital">
-                {% for tipo in tipos %}
-                <option value="{{tipo._id}}">{{tipo._nome_tipo}}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="number p-md-1">
-              <span class="input-group-text">Fomento</span>
-              <input
-              type="text"
-              class="form-control" id="inputFomento" name="inputFomento" placeholder="Ex: Capes, ANCINE "/>
-            </div>
-            <div class="number p-md-1">
-              <span class="input-group-text">Professor envolvido</span>
-              <input
-              type="text"
-              class="form-control" id="inputProfessor" name="inputProfessor" placeholder="Nome completo do professor"/>
+              class="form-control" id="inputNomeTipo" name="inputNomeTipo" placeholder="Ex: Auxilio estudantil, cursos"/>
             </div>
             <div class="row align-items-center">
               <button class="btn btn-lg btn-success" type="submit">Cadastrar</button>

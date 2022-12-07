@@ -75,11 +75,13 @@
                 {% endfor %}
               </select>
             </div>
-            <div class="number p-md-1">
-              <span class="input-group-text">Fomento</span>
-              <input
-              type="text"
-              class="form-control" id="inputFomento" name="inputFomento" placeholder="Ex: Capes, ANCINE "/>
+            <div class="input-group p-md-1">
+              <label class="input-group-text" for="inputFomento">Fomento</label>
+              <select class="form-select" id="inputFomento" name="inputFomento">
+                {% for fomento in fomentos %}
+                <option value="{{fomento._id}}">{{fomento._nome_fomento}}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="number p-md-1">
               <span class="input-group-text">Professor envolvido</span>

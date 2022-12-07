@@ -131,7 +131,6 @@ cursor.executemany(
     ]
 )
 
-
 conn.commit()
 cursor.close()
 

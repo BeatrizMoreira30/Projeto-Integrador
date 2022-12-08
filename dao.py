@@ -10,9 +10,10 @@ SQL_ATUALIZA_EDITAL = 'update Editais set NUMERO = %s, NOME = %s, DESCRICAO = %s
 SQL_EXCLUI_EDITAL = 'delete from Editais where idEDITAIS = %s'
 
 SQL_CRIA_INSCRICAO = 'insert into Inscricoes (Usuarios_MATRICULA, EDITAIS_idEDITAIS, CURSOS_idCURSOS) values (%s, %s, %s)'
-SQL_ATUALIZA_INSCRICAO = 'update Inscricoes EDITAIS_idEDITAIS = %s, CURSOS_idCURSOS = %s where Usuarios_MATRICULA = %s'
+SQL_ATUALIZA_INSCRICAO = 'update Inscricoes set CURSOS_idCURSOS = %s where Usuarios_MATRICULA = %s and EDITAIS_idEDITAIS = %s'
 SQL_BUSCA_INSCRICOES = 'select * from Inscricoes where Usuarios_MATRICULA = %s'
 SQL_BUSCA_INSCRICAO_ID = 'select * from Inscricoes where Usuarios_MATRICULA = %s and EDITAIS_idEDITAIS = %s'
+SQL_EXCLUI_INSCRICAO = 'delete from Inscricoes where Usuarios_MATRICULA = %s and EDITAIS_idEDITAIS = %s'
 
 SQL_BUSCA_CURSO = 'select * from Cursos'
 SQL_ATUALIZA_CURSO = 'update Cursos set  NOME_CURSO = %s, CAMPUS = %s where idCURSOS = %s'
@@ -24,6 +25,7 @@ SQL_BUSCA_TIPO = 'select * from TipoEdital'
 SQL_ATUALIZA_TIPO = 'update TipoEdital set  NomeTipo = %s where idTipoEdital = %s'
 SQL_CRIA_TIPO = 'insert into TipoEdital (NomeTipo) values (%s)'
 SQL_BUSCA_TIPO_ID = 'select * from TipoEdital where idTipoEdital = %s'
+SQL_EXCLUI_TIPO = 'delete from TipoEdital where idTipoEdital = %s'
 
 SQL_BUSCA_FOMENTO = 'select * from Fomentos'
 SQL_ATUALIZA_FOMENTO = 'update Fomentos set  NomeFomento = %s where idFomentos = %s'
@@ -112,7 +114,7 @@ class InscricaoDao:
 
     def atualizar(self, inscricao):
         cursor = self.__db.connection.cursor()
-        cursor.execute(SQL_ATUALIZA_INSCRICAO, (inscricao._edital, inscricao._curso, inscricao._ra,))
+        cursor.execute(SQL_ATUALIZA_INSCRICAO, (inscricao._curso, inscricao._ra, inscricao._edital))
         cursor._id = cursor.lastrowid
 
         self.__db.connection.commit()
@@ -121,14 +123,21 @@ class InscricaoDao:
         cursor = self.__db.connection.cursor()
         cursor.execute(SQL_BUSCA_INSCRICAO_ID, (id, edital, ))
         tupla = cursor.fetchone()
-        return Inscricao(tupla[0], tupla[1], tupla[2])
-
+        inscricao = traduz_inscricao(tupla) if tupla else None
+        return inscricao
+    
+    def excluir(self, id, edital):
+        self.__db.connection.cursor().execute(SQL_EXCLUI_INSCRICAO, (id, edital, ))
+        self.__db.connection.commit()
 
     def listar(self, id):
         cursor = self.__db.connection.cursor()
         cursor.execute(SQL_BUSCA_INSCRICOES, (id, ))
         inscricoes = traduz_inscricoes(cursor.fetchall())
         return inscricoes
+
+def traduz_inscricao(tupla):
+    return Inscricao(tupla[0], tupla[1], tupla[2])
 
 def traduz_inscricoes(inscricoes):
     def cria_insc_tupla(tupla):
@@ -186,7 +195,11 @@ class TipoDao:
         cursor = self.__db.connection.cursor()
         cursor.execute(SQL_BUSCA_TIPO_ID, (id,))
         tupla = cursor.fetchone()
-        return Cursos(tupla[1], id=tupla[0])
+        return Tipos(tupla[1], id=tupla[0])
+    
+    def excluir(self, id):
+        self.__db.connection.cursor().execute(SQL_EXCLUI_TIPO, (id, ))
+        self.__db.connection.commit()
 
     def salvar(self, tipo):
         cursor = self.__db.connection.cursor()

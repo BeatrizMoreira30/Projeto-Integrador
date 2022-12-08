@@ -26,17 +26,34 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/cadastrar_edital">Cadastrar Edital</a>
               </li>
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Tipos de Editais</a>
+                </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/cadastrar_tipo">Cadastrar Tipo</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/edit_tipo">Editar Tipo</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/excluir_tipo">Excluir Tipo</a>
+              </li>
+              </ul>
+              <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/cadastrar_fomento">Cadastrar Fomento</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/edit_fomento">Editar Fomento</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/excluir_fomento">Excluir Fomento</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/cadastrar_curso">Cadastrar Curso</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/edit_curso">Editar Curso</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/excluir_curso">Excluir Curso</a>
@@ -67,8 +84,8 @@
         <a type="button" href="{{url_for('excluir_edital', id=edital.id)}}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?');">Apagar</a>
       </div>
       {% endif %}
-      {% endfor %}
       </div>
+      {% endfor %}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
   </body>

@@ -120,7 +120,8 @@ def inscrever(id):
     edital = edital_dao.busca_id(id)
     usuario = usuario_dao.busca_id(session['usuario_logado'])
     cursos = curso_dao.listar()
-    return render_template('Inscrever.html', insc=edital, usuario=usuario, cursos=cursos)
+    inscricao = inscricao_dao.busca_id(usuario._matricula, id)
+    return render_template('Inscrever.html', insc=edital, usuario=usuario, cursos=cursos, inscricao=inscricao)
 
 @app.route('/inscricao', methods=['POST',])
 def inscricao():
@@ -139,7 +140,33 @@ def ver_inscricoes():
     inscricoes = inscricao_dao.listar(usuario._matricula)
     editais = edital_dao.listar()
     return render_template('minhas_inscricoes.html', inscricoes=inscricoes, editais=editais)
-    
+
+@app.route('/editar_inscricao/<int:id>')
+def editar_inscricao(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect('/login?proxima=ver_inscricoes')
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    edital = edital_dao.busca_id(id)
+    inscricao = inscricao_dao.busca_id(usuario._matricula, id)
+    cursos = curso_dao.listar()
+    return render_template('editar_inscricao.html', inscricao=inscricao, edital=edital, cursos=cursos)
+
+@app.route('/atualizar_inscricao', methods=['POST', ])
+def atualizar_inscricao():
+    ra = request.form['inputRA']
+    edital = request.form['idedital']
+    curso = request.form['inputCurso']
+    inscricao = Inscricao(ra, edital, curso)
+    inscricao_dao.atualizar(inscricao)
+    return redirect('/ver_inscricoes')
+
+@app.route('/excluir_inscricao/<int:id>')
+def excluir_inscricao(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect('/login?proxima=ver_inscricoes')
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    inscricao_dao.excluir(usuario._matricula, id)
+    return redirect('/ver_inscricoes')
 
 @app.route('/cadastrar_tipo')
 def cadastrar_tipo():
@@ -155,6 +182,41 @@ def novo_tipo():
     tipo_dao.salvar(tipo)
     return redirect('/')
 
+@app.route('/edit_tipo')
+def edit_tipo():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        tipos = tipo_dao.listar()
+        return render_template('atualizar_tipo.html', tipos=tipos)
+
+@app.route('/editar_tipo', methods=['POST', ])
+def editar_tipo():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        id = request.form['inputTipo']
+        tipo = tipo_dao.busca_id(id)
+        return render_template('editar_tipo.html', tipo=tipo)
+
+@app.route('/atualizar_tipo', methods=['POST',])
+def atualizar_tipo():
+    id = request.form['idTipo']
+    nome_tipo = request.form['inputNomeTipo']
+    tipo = Tipos(nome_tipo, id)
+    tipo_dao.salvar(tipo)
+    return redirect('/edit_tipo')
+
+@app.route('/excluir_tipo')
+def excluir_tipo():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        tipos = tipo_dao.listar()
+        return render_template('excluir_tipo.html', tipos=tipos)
+
+@app.route('/delete_tipo', methods=['POST', ])
+def delete_tipo():
+    id = request.form['inputTipo']
+    tipo_dao.excluir(id)
+    return redirect('/excluir_tipo')
 
 @app.route('/cadastrar_fomento')
 def cadastrar_fomento():
@@ -170,6 +232,13 @@ def novo_fomento():
     fomento_dao.salvar(fomento)
     return redirect('/')
 
+@app.route('/edit_fomento')
+def edit_fomento():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        fomentos = fomento_dao.listar()
+        return render_template('atualizar_fomento.html', fomentos=fomentos)
+
 @app.route('/editar_fomento', methods=['POST', ])
 def editar_fomento():
     usuario = usuario_dao.busca_id(session['usuario_logado'])
@@ -184,7 +253,7 @@ def atualizar_fomento():
     nome_fomento = request.form['inputNomeFomento']
     fomento = Fomentos(nome_fomento, id)
     fomento_dao.salvar(fomento)
-    return redirect('/editar_fomento')
+    return redirect('/edit_fomento')
 
 @app.route('/excluir_fomento')
 def excluir_fomento():
@@ -213,7 +282,31 @@ def novo_curso():
     campus = request.form['inputCampus']
     curso = Cursos(nome_curso, campus)
     curso_dao.salvar(curso)
-    return redirect('/cadastrar_cursi')
+    return redirect('/cadastrar_curso')
+
+@app.route('/edit_curso')
+def edit_curso():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        cursos = curso_dao.listar()
+        return render_template('atualizar_curso.html', cursos=cursos)
+
+@app.route('/editar_curso', methods=['POST', ])
+def editar_curso():
+    usuario = usuario_dao.busca_id(session['usuario_logado'])
+    if usuario._tipo == 1:
+        id = request.form['inputCurso']
+        curso = curso_dao.busca_id(id)
+        return render_template('editar_curso.html', curso=curso)
+
+@app.route('/atualizar_curso', methods=['POST',])
+def atualizar_curso():
+    id = request.form['idCurso']
+    nome_curso = request.form['inputNomeCurso']
+    nome_campus = request.form['inputNomeCampus']
+    curso = Cursos(nome_curso, nome_campus, id)
+    curso_dao.salvar(curso)
+    return redirect('/edit_curso')
 
 @app.route('/excluir_curso')
 def excluir_curso():
